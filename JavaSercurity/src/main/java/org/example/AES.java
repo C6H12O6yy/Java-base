@@ -1,54 +1,71 @@
 package org.example;
 
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
+import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
-import java.util.Scanner;
 
 public class AES {
-
-    // Thuật toán AES được sử dụng
     private static final String ALGORITHM = "AES";
+    private static final int KEY_SIZE = 128;
 
     // Phương thức mã hóa
-    public static String encrypt(String plainText, String key) throws Exception {
-        // Tạo khóa bí mật từ chuỗi khóa
-        SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(), ALGORITHM);
-        // Khởi tạo cipher với thuật toán AES
-        Cipher cipher = Cipher.getInstance(ALGORITHM);
-        // Đặt cipher vào chế độ mã hóa với khóa bí mật
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-        // Thực hiện mã hóa và trả về chuỗi đã mã hóa dưới dạng Base64
-        byte[] encryptedBytes = cipher.doFinal(plainText.getBytes());
-        return Base64.getEncoder().encodeToString(encryptedBytes);
+    public static String encrypt(String plainText, String key) {
+        try {
+            SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(), ALGORITHM);
+            Cipher cipher = Cipher.getInstance(ALGORITHM);
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            byte[] encryptedBytes = cipher.doFinal(plainText.getBytes());
+            return Base64.getEncoder().encodeToString(encryptedBytes);
+        } catch (NoSuchAlgorithmException e) {
+            System.out.println("Algorithm does not exist: " + e.getMessage());
+        } catch (NoSuchPaddingException e) {
+            System.out.println("Padding does not exist: " + e.getMessage());
+        } catch (InvalidKeyException e) {
+            System.out.println("Invalid key: " + e.getMessage());
+        } catch (BadPaddingException e) {
+            System.out.println("Invalid padding: " + e.getMessage());
+        } catch (IllegalBlockSizeException e) {
+            System.out.println("Illegal block size: " + e.getMessage());
+        }
+        return null;
     }
 
     // Phương thức giải mã
-    public static String decrypt(String encryptedText, String key) throws Exception {
-        // Tạo khóa bí mật từ chuỗi khóa
-        SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(), ALGORITHM);
-        // Khởi tạo cipher với thuật toán AES
-        Cipher cipher = Cipher.getInstance(ALGORITHM);
-        // Đặt cipher vào chế độ giải mã với khóa bí mật
-        cipher.init(Cipher.DECRYPT_MODE, secretKey);
-        // Giải mã và trả về chuỗi đã giải mã
-        byte[] decodedBytes = Base64.getDecoder().decode(encryptedText);
-        byte[] decryptedBytes = cipher.doFinal(decodedBytes);
-        return new String(decryptedBytes);
+    public static String decrypt(String encryptedText, String key) {
+        try {
+            SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(), ALGORITHM);
+            Cipher cipher = Cipher.getInstance(ALGORITHM);
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            byte[] decodedBytes = Base64.getDecoder().decode(encryptedText);
+            byte[] decryptedBytes = cipher.doFinal(decodedBytes);
+            return new String(decryptedBytes);
+        } catch (NoSuchAlgorithmException e) {
+            System.out.println("Algorithm does not exist: " + e.getMessage());
+        } catch (NoSuchPaddingException e) {
+            System.out.println("Padding does not exist: " + e.getMessage());
+        } catch (InvalidKeyException e) {
+            System.out.println("Invalid key: " + e.getMessage());
+        } catch (BadPaddingException e) {
+            System.out.println("Invalid padding: " + e.getMessage());
+        } catch (IllegalBlockSizeException e) {
+            System.out.println("Illegal block size: " + e.getMessage());
+        }
+        return null;
     }
 
     // Phương thức tạo khóa ngẫu nhiên
-    public static String generateKey() throws Exception {
-        // Tạo generator cho thuật toán AES
-        KeyGenerator keyGen = KeyGenerator.getInstance(ALGORITHM);
-        // Khởi tạo generator với độ dài khóa là 128 bit
-        keyGen.init(128); // AES-128
-        // Tạo khóa bí mật
-        SecretKey secretKey = keyGen.generateKey();
-        // Trả về chuỗi khóa dưới dạng Base64
-        return Base64.getEncoder().encodeToString(secretKey.getEncoded());
+    public static String generateKey() {
+        try {
+            KeyGenerator keyGen = KeyGenerator.getInstance(ALGORITHM);
+            keyGen.init(KEY_SIZE); // AES-128
+            SecretKey secretKey = keyGen.generateKey();
+            return Base64.getEncoder().encodeToString(secretKey.getEncoded());
+        } catch (NoSuchAlgorithmException e) {
+            System.out.println("Key Generation Error: No such algorithm - " + e.getMessage());
+        }
+        return null;
     }
 
     // Phương thức main để kiểm tra mã hóa và giải mã
@@ -56,20 +73,31 @@ public class AES {
         try {
             // Tạo khóa AES ngẫu nhiên
             String key = generateKey();
+            if (key == null) {
+                System.out.println("Error generating key.");
+                return;
+            }
             // Chuỗi gốc cần mã hóa
             String originalText = "Đây là chuỗi cần mã hóa và giải mã bằng AES.";
             // Mã hóa chuỗi gốc
             String encryptedText = encrypt(originalText, key);
+            if (encryptedText == null) {
+                System.out.println("Error encrypting text.");
+                return;
+            }
             // Giải mã chuỗi đã mã hóa
             String decryptedText = decrypt(encryptedText, key);
-
+            if (decryptedText == null) {
+                System.out.println("Error decrypting text.");
+                return;
+            }
             // In ra kết quả
             System.out.println(Constants.originalText + originalText);
             System.out.println(Constants.encryptedText + encryptedText);
             System.out.println(Constants.decryptedText + decryptedText);
             System.out.println(Constants.keyCode + key);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
     }
 }
