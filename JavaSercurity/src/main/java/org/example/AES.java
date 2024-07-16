@@ -19,15 +19,15 @@ public class AES {
             byte[] encryptedBytes = cipher.doFinal(plainText.getBytes());
             return Base64.getEncoder().encodeToString(encryptedBytes);
         } catch (NoSuchAlgorithmException e) {
-            System.out.println("Algorithm does not exist: " + e.getMessage());
+            System.out.println(Constants.NoSuchAlgorithmExceptionMessage + e.getMessage());
         } catch (NoSuchPaddingException e) {
-            System.out.println("Padding does not exist: " + e.getMessage());
+            System.out.println(Constants.NoSuchPaddingExceptionMessage + e.getMessage());
         } catch (InvalidKeyException e) {
-            System.out.println("Invalid key: " + e.getMessage());
+            System.out.println(Constants.InvalidKeyExceptionMessage + e.getMessage());
         } catch (BadPaddingException e) {
-            System.out.println("Invalid padding: " + e.getMessage());
+            System.out.println(Constants.BadPaddingExceptionMessage + e.getMessage());
         } catch (IllegalBlockSizeException e) {
-            System.out.println("Illegal block size: " + e.getMessage());
+            System.out.println(Constants.IllegalBlockSizeExceptionMessage + e.getMessage());
         }
         return null;
     }
@@ -41,16 +41,16 @@ public class AES {
             byte[] decodedBytes = Base64.getDecoder().decode(encryptedText);
             byte[] decryptedBytes = cipher.doFinal(decodedBytes);
             return new String(decryptedBytes);
-        } catch (NoSuchAlgorithmException e) {
-            System.out.println("Algorithm does not exist: " + e.getMessage());
+        }  catch (NoSuchAlgorithmException e) {
+            System.out.println(Constants.NoSuchAlgorithmExceptionMessage + e.getMessage());
         } catch (NoSuchPaddingException e) {
-            System.out.println("Padding does not exist: " + e.getMessage());
+            System.out.println(Constants.NoSuchPaddingExceptionMessage + e.getMessage());
         } catch (InvalidKeyException e) {
-            System.out.println("Invalid key: " + e.getMessage());
+            System.out.println(Constants.InvalidKeyExceptionMessage + e.getMessage());
         } catch (BadPaddingException e) {
-            System.out.println("Invalid padding: " + e.getMessage());
+            System.out.println(Constants.BadPaddingExceptionMessage + e.getMessage());
         } catch (IllegalBlockSizeException e) {
-            System.out.println("Illegal block size: " + e.getMessage());
+            System.out.println(Constants.IllegalBlockSizeExceptionMessage + e.getMessage());
         }
         return null;
     }
@@ -63,7 +63,7 @@ public class AES {
             SecretKey secretKey = keyGen.generateKey();
             return Base64.getEncoder().encodeToString(secretKey.getEncoded());
         } catch (NoSuchAlgorithmException e) {
-            System.out.println("Key Generation Error: No such algorithm - " + e.getMessage());
+            System.out.println(Constants.NoSuchAlgorithmExceptionMessage + e.getMessage());
         }
         return null;
     }

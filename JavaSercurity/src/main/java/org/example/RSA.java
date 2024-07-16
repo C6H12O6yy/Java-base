@@ -18,9 +18,11 @@ public class RSA {
             keyGen.initialize(keySize); // Key length (2048 bits)
             return keyGen.generateKeyPair();
         } catch (NoSuchAlgorithmException e) {
-            System.err.println("Algorithm does not exist: " + e.getMessage());
+            System.err.println(Constants.NoSuchAlgorithmExceptionMessage + e.getMessage());
+        }catch (NullPointerException e){
+            System.out.println(Constants.NullPointerExceptionMessage + e.getMessage());
         } catch (InvalidParameterException e) {
-            System.err.println("Invalid parameter: " + e.getMessage());
+            System.err.println(Constants.InvalidParameterExceptionMessage + e.getMessage());
         }
         return null;
     }
@@ -33,15 +35,15 @@ public class RSA {
             byte[] encryptedBytes = cipher.doFinal(plainText.getBytes());
             return Base64.getEncoder().encodeToString(encryptedBytes);
         } catch (NoSuchAlgorithmException e) {
-            System.err.println("Algorithm does not exist: " + e.getMessage());
+            System.out.println(Constants.NoSuchAlgorithmExceptionMessage + e.getMessage());
         } catch (NoSuchPaddingException e) {
-            System.err.println("Padding does not exist: " + e.getMessage());
+            System.out.println(Constants.NoSuchPaddingExceptionMessage + e.getMessage());
         } catch (InvalidKeyException e) {
-            System.err.println("Invalid key: " + e.getMessage());
-        } catch (IllegalBlockSizeException e) {
-            System.err.println("Illegal block size: " + e.getMessage());
+            System.out.println(Constants.InvalidKeyExceptionMessage + e.getMessage());
         } catch (BadPaddingException e) {
-            System.err.println("Invalid padding: " + e.getMessage());
+            System.out.println(Constants.BadPaddingExceptionMessage + e.getMessage());
+        } catch (IllegalBlockSizeException e) {
+            System.out.println(Constants.IllegalBlockSizeExceptionMessage + e.getMessage());
         }
         return null;
     }
@@ -54,15 +56,15 @@ public class RSA {
             byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedText));
             return new String(decryptedBytes);
         } catch (NoSuchAlgorithmException e) {
-            System.err.println("Algorithm does not exist: " + e.getMessage());
+            System.out.println(Constants.NoSuchAlgorithmExceptionMessage + e.getMessage());
         } catch (NoSuchPaddingException e) {
-            System.err.println("Padding does not exist: " + e.getMessage());
+            System.out.println(Constants.NoSuchPaddingExceptionMessage + e.getMessage());
         } catch (InvalidKeyException e) {
-            System.err.println("Invalid key: " + e.getMessage());
-        } catch (IllegalBlockSizeException e) {
-            System.err.println("Illegal block size: " + e.getMessage());
+            System.out.println(Constants.InvalidKeyExceptionMessage + e.getMessage());
         } catch (BadPaddingException e) {
-            System.err.println("Invalid padding: " + e.getMessage());
+            System.out.println(Constants.BadPaddingExceptionMessage + e.getMessage());
+        } catch (IllegalBlockSizeException e) {
+            System.out.println(Constants.IllegalBlockSizeExceptionMessage + e.getMessage());
         }
         return null;
     }
@@ -94,8 +96,6 @@ public class RSA {
                 System.out.println("Error decrypting text.");
                 return;
             }
-
-
             System.out.println(Constants.originalText + originalText);
             System.out.println(Constants.encryptedText + encryptedText);
             System.out.println(Constants.decryptedText + decryptedText);
